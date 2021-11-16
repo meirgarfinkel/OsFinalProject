@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 /*
-WriterThread x in the master class should be given a job through x.setJob.
+WriterThread x in the master class should be given a job through x.setJob(String job).
 x.setJob will make the job variable not null, allowing it to be sent to the slave.
 It will be sent to the slave through outWriter.println(job);
 After sending it to the slave job will be reset to null so the slave doesnt get the same job over and over.
