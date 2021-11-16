@@ -1,8 +1,5 @@
 import java.net.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 import java.io.*;
 import java.util.concurrent.SynchronousQueue;
 
@@ -12,35 +9,38 @@ public class Master {
 
     public static void main(String[] args) throws IOException {
 
+
         // Hard code in port number if necessary:
         args = new String[] { "30121" };
 
         int portNumber = Integer.parseInt(args[0]);
 
+        Queue<String> doneList = new LinkedList<String>();
+
         try (ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[0]));
              //Create slave sockets
-             Socket SlaveA = serverSocket.accept();
-             Socket SlaveB = serverSocket.accept();
+             Socket slaveA = serverSocket.accept();
+             Socket slaveB = serverSocket.accept();
 
              //Create slave writers
-             PrintWriter SlaveAOutWriter = new PrintWriter(SlaveA.getOutputStream(), true);
-             PrintWriter SlaveBOutWriter = new PrintWriter(SlaveB.getOutputStream(), true);
+             PrintWriter slaveAOutWriter = new PrintWriter(slaveA.getOutputStream(), true);
+             PrintWriter slaveBOutWriter = new PrintWriter(slaveB.getOutputStream(), true);
 
              //Create slave readers
-             BufferedReader SlaveAInReader = new BufferedReader(new InputStreamReader(SlaveA.getInputStream()));
-             BufferedReader SlaveBInReader = new BufferedReader(new InputStreamReader(SlaveB.getInputStream()));
+             BufferedReader slaveAInReader = new BufferedReader(new InputStreamReader(slaveA.getInputStream()));
+             BufferedReader slaveBInReader = new BufferedReader(new InputStreamReader(slaveB.getInputStream()));
         ) {
+            //Create writer threads
+            WriterThread slaveAWriter = new WriterThread(slaveAOutWriter);
+            WriterThread slaveBWriter = new WriterThread(slaveBOutWriter);
+
+            //Create reader threads
+
+
+
             while (true) {
 
-                System.out.println("Connected to client.");
 
-                //Listens for a message from the client to see if it is done sending packets
-                if ((inReader.readLine()).equals("FINISHED")) {
-                    break;
-                }
-
-                //If the client has not received all packets, server resets and sends packets again
-                System.out.println("Restarting");
             }
         } catch (IOException e) {
             System.out.println(

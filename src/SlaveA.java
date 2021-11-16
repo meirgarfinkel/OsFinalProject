@@ -20,6 +20,8 @@ public class SlaveA {
             String stringMasterJob;
 
             while (true) {
+                System.out.println("Slave A connected");
+
 
                 //Gets the first response index from the server
                 stringMasterJob = inReader.readLine();

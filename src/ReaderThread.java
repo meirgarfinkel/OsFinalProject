@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 /*
-ReaderThread will receive it's job from the slave class through inReader.readLine();
+ReaderThread will receive its job from the slave class through inReader.readLine();
 This will allow the thread to add this job to the done list that is passed in from the master
 job variable will be reset to null so the thread can go back to listening for jobs from the master
  */
