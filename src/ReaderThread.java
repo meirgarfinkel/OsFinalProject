@@ -12,12 +12,14 @@ job variable will be reset to null so the thread can go back to listening for jo
 
 public class ReaderThread extends Thread{
     String job;
-    BufferedReader inReader;
+    BufferedReader inReader; //expecting to receive from master, connected to the slave (totally disconnected from master)
     ArrayList done;
+    Object locker;
 
-    public ReaderThread(BufferedReader inReader, ArrayList done){
+    public ReaderThread(BufferedReader inReader, ArrayList done, Object locker){
         this.inReader = inReader;
         this.done = done;
+        this.locker = locker;
     }
 
     public void setJob(String job){
@@ -33,12 +35,14 @@ public class ReaderThread extends Thread{
         while(true){
             if(job.equals(null)){
                 try {
-                    inReader.readLine();
+                    job = inReader.readLine();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }else{
-                done.add(getJob());
+                synchronized(locker) {
+                    done.add(getJob());
+                }
                 setJob(null);
             }
         }
