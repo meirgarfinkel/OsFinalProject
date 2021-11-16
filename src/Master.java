@@ -48,4 +48,29 @@ public class Master {
             System.out.println(e.getMessage());
         }
     }
+
+    public int estimateTimeLeft(String aOrB, ArrayList<String> jobs){
+        if(aOrB.equals("A") || aOrB.equals("B")){
+            throw new IllegalArgumentException("First argument must be either \'A\' or \'B\'");
+        }
+
+        int totalTime = 0;
+
+        int aTime = 5;
+        int bTime = 15;
+        if(aOrB.equals("B")){
+            aTime = 15;
+            bTime = 5;
+        }
+        for(String job : jobs){
+            if(job.equals("A")){
+                totalTime += aTime;
+            }else if(job.equals("B")){
+                totalTime += bTime;
+            }else {
+                throw new IllegalArgumentException("The ArrayList you entered contains non \'A\' or \'B\'");
+            }
+        }
+        return totalTime;
+    }
 }
