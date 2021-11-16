@@ -24,12 +24,14 @@ public class SlaveA {
                 //Gets the first response index from the server
                 stringMasterJob = inReader.readLine();
 
+                System.out.println("Slave A received a job");
+
                 if (stringMasterJob.charAt(0) == 'A'){
-                    System.out.println("sleeping for 5 seconds");
+                    System.out.println("Doing A type job. Sleeping for 5 seconds");
                     Thread.sleep(5000);
                 }
                 else {
-                    System.out.println("sleeping for 15 seconds");
+                    System.out.println("Doing B type job. Sleeping for 5 seconds");
                     Thread.sleep(15_000);
                 }
             }
