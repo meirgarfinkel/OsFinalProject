@@ -1,33 +1,14 @@
 import java.net.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.io.*;
+import java.util.concurrent.SynchronousQueue;
 
-public class SimpleServer {
-
-    //String to send to the client
-    static String data = """
-			Look, I didn't want to be a half-blood.
-			If you're reading this because you think you might be one, my
-			advice is: close this book right now. Believe whatever lie your
-			mom or dad told you about your birth, and try to lead a normal
-			life.
-			Being a half-blood is dangerous. It's scary. Most of the time, it
-			gets you killed in painful, nasty ways.
-			If you're a normal kid, reading this because you think it's fiction,
-			great. Read on. I envy you for being able to believe that none of
-			this ever happened.
-			But if you recognize yourself in these pages-if you feel something
-			stirring inside-stop reading immediately. You might be one of us.
-			And once you know that, it's only a matter of time before they
-			sense it too, and they'll come for you.
-			Don't say I didn't warn you.
-			My name is Percy Jackson.""";
-
-    //Creates a Packet Creator with the data given
-    static PacketCreator packetCreator = new PacketCreator(data);
-    static ArrayList<Packet> packetList;
+public class Master {
+    // reader thread expects a buffered reader object which connects it to the slave and expects access to done list
+    // writer expects a printwriter object. -- writer.setJob(String)
 
     public static void main(String[] args) throws IOException {
 
@@ -37,9 +18,15 @@ public class SimpleServer {
         int portNumber = Integer.parseInt(args[0]);
 
         try (ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[0]));
-             Socket clientSocket1 = serverSocket.accept();
-             PrintWriter outWriter = new PrintWriter(clientSocket1.getOutputStream(), true);
-             BufferedReader inReader= new BufferedReader(new InputStreamReader(clientSocket1.getInputStream()))
+             //
+             Socket SlaveA = serverSocket.accept();
+             Socket SlaveB = serverSocket.accept();
+
+             PrintWriter SLaveAOutWriter = new PrintWriter(SlaveA.getOutputStream(), true);
+             PrintWriter SLaveBOutWriter = new PrintWriter(SlaveB.getOutputStream(), true);
+
+             BufferedReader SlaveAInReader = new BufferedReader(new InputStreamReader(SlaveA.getInputStream()));
+             BufferedReader SlaveBInReader = new BufferedReader(new InputStreamReader(SlaveB.getInputStream()));
         ) {
 
             //Packet Creator creates packets with assigned indexes
