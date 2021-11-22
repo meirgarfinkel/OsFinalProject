@@ -21,7 +21,7 @@ public class Master {
         jobs.add("Ap");
 
         // Hard code in port number if necessary:
-        args = new String[] { "30121" };
+        args = new String[]{"30121"};
 
         int portNumber = Integer.parseInt(args[0]);
 
@@ -80,20 +80,21 @@ public class Master {
 
         int aTime = 5;
         int bTime = 15;
-        if(aOrB.equals("B")){
+        if (aOrB.equals("B")) {
             aTime = 15;
             bTime = 5;
         }
-        for(String job : jobs){
-            if(job.equals("A")){
+        for (String job : jobs) {
+            if (job.equals("A")) {
                 totalTime += aTime;
-            }else if(job.equals("B")){
+            } else if (job.equals("B")) {
                 totalTime += bTime;
-            }else {
+            } else {
                 throw new IllegalArgumentException("The ArrayList you entered contains non \'A\' or \'B\'");
             }
         }
         return totalTime;
         //comment
+        //comment 2
     }
 }
