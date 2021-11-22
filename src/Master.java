@@ -9,6 +9,14 @@ public class Master {
 
     public static void main(String[] args) throws IOException {
 
+        Queue<String> slaveAQueue = new LinkedList<>();
+        Queue<String> slaveBQueue = new LinkedList<>();
+        ArrayList<String> jobs = new ArrayList<>();
+        jobs.add("Ab");
+        jobs.add("Bn");
+        jobs.add("Am");
+        jobs.add("Bh");
+        jobs.add("Ap");
 
         // Hard code in port number if necessary:
         args = new String[] { "30121" };
@@ -16,7 +24,9 @@ public class Master {
         int portNumber = Integer.parseInt(args[0]);
 
         ArrayList<String> doneList = new ArrayList<>();
-        Object locker = null;
+        Object readerLocker = null;
+        Object writerLocker = null;
+
 
         try (ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[0]));
              //Create slave sockets
@@ -32,14 +42,14 @@ public class Master {
              BufferedReader slaveBInReader = new BufferedReader(new InputStreamReader(slaveB.getInputStream()));
         ) {
             //Create writer threads
-            WriterThread slaveAWriter = new WriterThread(slaveAOutWriter);
-            WriterThread slaveBWriter = new WriterThread(slaveBOutWriter);
+            WriterThread slaveAWriter = new WriterThread(slaveAOutWriter, slaveAQueue, writerLocker);
+            WriterThread slaveBWriter = new WriterThread(slaveBOutWriter, slaveBQueue, writerLocker);
 
             //Create reader threads
-            ReaderThread slaveAreader = new ReaderThread(slaveAInReader, doneList, locker);
-            ReaderThread slaveBreader = new ReaderThread(slaveBInReader, doneList, locker);
+            ReaderThread slaveAReader = new ReaderThread(slaveAInReader, doneList, readerLocker);
+            ReaderThread slaveBReader = new ReaderThread(slaveBInReader, doneList, readerLocker);
 
-
+            //master delegating jobs to queus
             while (true) {
 
                 
