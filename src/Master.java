@@ -15,7 +15,8 @@ public class Master {
 
         int portNumber = Integer.parseInt(args[0]);
 
-        Queue<String> doneList = new LinkedList<String>();
+        ArrayList<String> doneList = new ArrayList<>();
+        Object locker = null;
 
         try (ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[0]));
              //Create slave sockets
@@ -35,12 +36,13 @@ public class Master {
             WriterThread slaveBWriter = new WriterThread(slaveBOutWriter);
 
             //Create reader threads
-
+            ReaderThread slaveAreader = new ReaderThread(slaveAInReader, doneList, locker);
+            ReaderThread slaveBreader = new ReaderThread(slaveBInReader, doneList, locker);
 
 
             while (true) {
 
-
+                
             }
         } catch (IOException e) {
             System.out.println(
