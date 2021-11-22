@@ -33,7 +33,7 @@ public class ReaderThread extends Thread{
     @Override
     public void run(){
         while(true){
-            if(job.equals(null)){
+            if(job == (null)){
                 try {
                     job = inReader.readLine();
                 } catch (IOException e) {

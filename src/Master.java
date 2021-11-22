@@ -11,6 +11,8 @@ public class Master {
 
         Queue<String> slaveAQueue = new LinkedList<>();
         Queue<String> slaveBQueue = new LinkedList<>();
+
+
         ArrayList<String> jobs = new ArrayList<>();
         jobs.add("Ab");
         jobs.add("Bn");
@@ -49,7 +51,15 @@ public class Master {
             ReaderThread slaveAReader = new ReaderThread(slaveAInReader, doneList, readerLocker);
             ReaderThread slaveBReader = new ReaderThread(slaveBInReader, doneList, readerLocker);
 
-            //master delegating jobs to queus
+            //Start Threads
+
+            slaveAReader.start();
+            slaveBReader.start();
+
+            slaveAWriter.start();
+            slaveBWriter.start();
+
+            //master delegating jobs to queues
             while (true) {
 
                 
