@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Queue;
 
 /*
 WriterThread x in the master class should be given a job through x.setJob(String job).
@@ -13,29 +14,27 @@ After sending it to the slave job will be reset to null so the slave doesnt get 
  */
 
 public class WriterThread extends Thread{
-    String job;
+    //String job;
     PrintWriter outWriter;
+    Queue<String> toDo;
+    Object locker;
 
-    public WriterThread(PrintWriter outWriter){
+    public WriterThread(PrintWriter outWriter, Queue<String> toDo, Object locker){
         this.outWriter = outWriter;
+        this.toDo = toDo;
+        this.locker = locker;
     }
 
     public void setJob(String job){
-        this.job = job;
-    }
-
-    public String getJob(){
-        return job;
+        toDo.add(job);
     }
 
     @Override
     public void run(){
         while(true){
-            if(job.equals(null)){
-
-            }else{
-                outWriter.println(job);
-                job = null;
+            while(toDo.isEmpty()); //spin
+            synchronized(locker) {
+                outWriter.println(toDo.poll());
             }
         }
     }
