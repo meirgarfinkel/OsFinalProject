@@ -25,6 +25,9 @@ public class SlaveA {
 
                 //Gets the first response index from the server
                 stringMasterJob = inReader.readLine();
+                while(stringMasterJob.equals(null)){
+                    stringMasterJob = inReader.readLine();
+                }
 
                 System.out.println("Slave A received a job");
 
