@@ -13,11 +13,11 @@ public class Master {
         Queue<String> slaveBQueue = new LinkedList<>();
 
 
-        ArrayList<String> jobs = new ArrayList<>();
+        Queue<String> jobs = new LinkedList<>();
         jobs.add("Ab");
-        jobs.add("Bn");
+        jobs.add("An");
         jobs.add("Am");
-        jobs.add("Bh");
+        jobs.add("Ah");
         jobs.add("Ap");
 
         // Hard code in port number if necessary:
@@ -61,8 +61,13 @@ public class Master {
 
             //master delegating jobs to queues
             while (true) {
-                slaveAWriter.setJob("Yuh");
-
+                if(!jobs.isEmpty()){
+                    Queue<String> listToAddTo = delegate(slaveAQueue, slaveBQueue, jobs.peek());
+                    listToAddTo.add(jobs.poll());
+                }
+                else{
+                    System.out.println("Empty");
+                }
             }
         } catch (IOException e) {
             System.out.println(
@@ -71,8 +76,26 @@ public class Master {
         }
     }
 
-    public int estimateTimeLeft(String aOrB, ArrayList<String> jobs){
-        if(aOrB.equals("A") || aOrB.equals("B")){
+    public static Queue<String> delegate(Queue<String> aList, Queue<String> bList, String job){
+        char jobType = job.charAt(0);
+        int aTimeLeft = estimateTimeLeft('A', aList);
+        int bTimeLeft = estimateTimeLeft('B', bList);
+
+        if(aTimeLeft > bTimeLeft){
+            return bList;
+        }else if (bTimeLeft > aTimeLeft){
+            return aList;
+        }else{ //if (bTimeLeft == aTimeLeft){
+            if(jobType == 'A') {
+                return aList;
+            }else{ //if(jobType == 'B'){
+                return bList;
+            }
+        }
+    }
+
+    public static int estimateTimeLeft(char aOrB, Queue<String> jobs){
+        if(!(aOrB == ('A') || aOrB == ('B'))){
             throw new IllegalArgumentException("First argument must be either \'A\' or \'B\'");
         }
 
@@ -80,7 +103,7 @@ public class Master {
 
         int aTime = 5;
         int bTime = 15;
-        if (aOrB.equals("B")) {
+        if (aOrB == ('B')) {
             aTime = 15;
             bTime = 5;
         }

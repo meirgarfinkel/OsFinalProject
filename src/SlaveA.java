@@ -35,7 +35,7 @@ public class SlaveA {
 
                 if (stringMasterJob.charAt(0) == 'A'){
                     System.out.println("Doing A type job. Sleeping for 5 seconds");
-                    Thread.sleep(5000);
+                    Thread.sleep(5_000);
                 }
                 else {
                     System.out.println("Doing B type job. Sleeping for 5 seconds");
