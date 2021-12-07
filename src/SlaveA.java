@@ -28,6 +28,8 @@ public class SlaveA {
                 while(stringMasterJob.equals(null)){
                     stringMasterJob = inReader.readLine();
                 }
+                System.out.println(stringMasterJob);
+                outWriter.println("Done");
 
                 System.out.println("Slave A received a job");
 

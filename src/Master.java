@@ -26,8 +26,8 @@ public class Master {
         int portNumber = Integer.parseInt(args[0]);
 
         ArrayList<String> doneList = new ArrayList<>();
-        Object readerLocker = null;
-        Object writerLocker = null;
+        Object readerLocker = new Object();
+        Object writerLocker = new Object();
 
 
         try (ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[0]));
@@ -61,8 +61,8 @@ public class Master {
 
             //master delegating jobs to queues
             while (true) {
+                slaveAWriter.setJob("Yuh");
 
-                
             }
         } catch (IOException e) {
             System.out.println(
