@@ -25,6 +25,8 @@ public class Client {
         jobs.put(5,'B');
         jobs.put(6,'A');
 
+        int amountOfJobs = jobs.size();
+
         int jobID = 1;
         if (args.length != 1) {
             System.err.println("Usage: java EchoServer <port number>");
@@ -40,10 +42,28 @@ public class Client {
              BufferedReader requestReader1 = new BufferedReader(
                      new InputStreamReader(clientSocket1.getInputStream())) )
         {
-            //everytime time the client sends a job, the id increments
-            //somthing to this extent, thou not correct right now
-            responseWriter1.println(jobs.get(jobID) + jobID);
-            jobID++;
+            //everytime the client sends a job, the id increments
+            //something to this extent, though I don't know if correct
+            for (int i = 0; i < jobs.size(); i++) {
+                responseWriter1.println(jobs.get(jobID) + jobID);
+                jobID++;
+            }
+            //while the amount of jobs != 0
+            while (jobs.size() !=0) {
+                int num = 0;
+                //send them to the master
+                responseWriter1.println(jobs.get(num)); // send request to server
+                num++;
+            }
+            //while it has not got back all the jobs, read to make sure to get it from master
+            //todo maybe make it read every two seconds?
+            //should print out job x was finished.
+            int jobsReceived = 0;
+            while(jobsReceived <= amountOfJobs){//the amount of jobs received has not reached the total sent
+                serverResponse = responseReader.readLine(); //keep reading
+                System.out.println("SERVER RESPONDS: \"" + serverResponse + "\"");
+            }
+
 
         }
 
