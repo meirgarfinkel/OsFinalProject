@@ -6,12 +6,10 @@ import java.util.concurrent.SynchronousQueue;
 public class Master {
     // reader thread expects a buffered reader object which connects it to the slave and expects access to done list
     // writer expects a printwriter object. -- writer.setJob(String)
-
     public static void main(String[] args) throws IOException {
 
         Queue<String> slaveAQueue = new LinkedList<>();
         Queue<String> slaveBQueue = new LinkedList<>();
-
 
         Queue<String> jobs = new LinkedList<>();
         jobs.add("Bb");
@@ -45,48 +43,35 @@ public class Master {
              BufferedReader slaveBInReader = new BufferedReader(new InputStreamReader(slaveB.getInputStream()));
         ) {
             //Create writer threads
-            WriterThread slaveAWriter = new WriterThread(slaveAOutWriter, slaveAQueue, writerLocker);
-            WriterThread slaveBWriter = new WriterThread(slaveBOutWriter, slaveBQueue, writerLocker);
+            WriterThread slaveAWriter = new WriterThread(slaveAOutWriter, slaveAQueue);
+            WriterThread slaveBWriter = new WriterThread(slaveBOutWriter, slaveBQueue);
 
             //Create reader threads
-            ReaderThread slaveAReader = new ReaderThread(slaveAInReader, doneListA, readerLocker);
-            ReaderThread slaveBReader = new ReaderThread(slaveBInReader, doneListB, readerLocker);
+            ReaderThread slaveAReader = new ReaderThread(slaveAInReader, doneListA);
+            ReaderThread slaveBReader = new ReaderThread(slaveBInReader, doneListB);
 
-            //Start Threads
-
+            //Start reader threads
             slaveAReader.start();
             slaveBReader.start();
-
+            //Start writer threads
             slaveAWriter.start();
             slaveBWriter.start();
 
             //master delegating jobs to queues
             while (true) {
                 if(!jobs.isEmpty()){
-                    if(slaveAQueue.size() > slaveBQueue.size()){
-                        slaveBQueue.add(jobs.poll());
-                    }else if(slaveAQueue.size() < slaveBQueue.size()){
-                        slaveAQueue.add(jobs.poll());
-                    }else if(slaveAQueue.size() == slaveBQueue.size()){
-                        if(jobs.peek().charAt(0) == 'A'){
-                            slaveAQueue.add(jobs.poll());
-                        }else if(jobs.peek().charAt(0) == 'B'){
-                            slaveBQueue.add(jobs.poll());
-                        }
-                    }
-                    //TAKE IN RESPONSE
+                    delegate(slaveAQueue, slaveBQueue, jobs);
                 }
                 else{
                     //TAKE IN RESPONSES
                     if(!doneListA.isEmpty()){
-                        System.out.println("FROM A LIST: " + doneListA.pop());
-                    }else if(!doneListB.isEmpty()){
-                        System.out.println("FROM B LIST: " + doneListB.pop());
-                    }else{
-                        System.out.println("Empty done list");
+                        System.out.println("DONE FROM A LIST: " + doneListA.pop());
                     }
-                    System.out.println("Empty delegating list, waiting a second");
-                    Thread.sleep(1000);
+                    if(!doneListB.isEmpty()){
+                        System.out.println("DONE FROM B LIST: " + doneListB.pop());
+                    }
+                    System.out.println("Master has delegated all jobs, waiting 5 seconds.");
+                    Thread.sleep(5000);
                 }
             }
         } catch (IOException | InterruptedException e) {
@@ -96,46 +81,17 @@ public class Master {
         }
     }
 
-/*    public static Queue<String> delegate(Queue<String> aList, Queue<String> bList, String job){
-        char jobType = job.charAt(0);
-        int aTimeLeft = estimateTimeLeft('A', aList);
-        int bTimeLeft = estimateTimeLeft('B', bList);
-
-        if(aTimeLeft > bTimeLeft){
-            return bList;
-        }else if (bTimeLeft > aTimeLeft){
-            return aList;
-        }else{ //if (bTimeLeft == aTimeLeft){
-            if(jobType == 'A') {
-                return aList;
-            }else{ //if(jobType == 'B'){
-                return bList;
+    private static void delegate(Queue<String> slaveAQueue, Queue<String> slaveBQueue, Queue<String> jobs) {
+        if(slaveAQueue.size() > slaveBQueue.size()){
+            slaveBQueue.add(jobs.poll());
+        }else if(slaveAQueue.size() < slaveBQueue.size()){
+            slaveAQueue.add(jobs.poll());
+        }else if(slaveAQueue.size() == slaveBQueue.size()){
+            if(jobs.peek().charAt(0) == 'A'){
+                slaveAQueue.add(jobs.poll());
+            }else if(jobs.peek().charAt(0) == 'B'){
+                slaveBQueue.add(jobs.poll());
             }
         }
     }
-
-    public static int estimateTimeLeft(char aOrB, Queue<String> jobs){
-        if(!(aOrB == ('A') || aOrB == ('B'))){
-            throw new IllegalArgumentException("First argument must be either \'A\' or \'B\'");
-        }
-
-        int totalTime = 0;
-
-        int aTime = 5;
-        int bTime = 15;
-        if (aOrB == ('B')) {
-            aTime = 15;
-            bTime = 5;
-        }
-        for (String job : jobs) {
-            if (job.equals("A")) {
-                totalTime += aTime;
-            } else if (job.equals("B")) {
-                totalTime += bTime;
-            } else {
-                throw new IllegalArgumentException("The ArrayList you entered contains non \'A\' or \'B\'");
-            }
-        }
-        return totalTime;
-    }*/
 }

@@ -15,12 +15,10 @@ public class ReaderThread extends Thread {
     String job;
     BufferedReader inReader; //expecting to receive from master, connected to the slave (totally disconnected from master)
     LinkedList done;
-    Object locker;
 
-    public ReaderThread(BufferedReader inReader, LinkedList done, Object locker) {
+    public ReaderThread(BufferedReader inReader, LinkedList done) {
         this.inReader = inReader;
         this.done = done;
-        this.locker = locker;
     }
 
     public void setJob(String job) {

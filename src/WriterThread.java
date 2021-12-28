@@ -17,25 +17,16 @@ public class WriterThread extends Thread{
     //String job;
     PrintWriter outWriter;
     Queue<String> toDo;
-    Object locker;
 
-    public WriterThread(PrintWriter outWriter, Queue<String> toDo, Object locker){
+    public WriterThread(PrintWriter outWriter, Queue<String> toDo){
         this.outWriter = outWriter;
         this.toDo = toDo;
-        this.locker = locker;
     }
-
-    public void setJob(String job){
-        toDo.add(job);
-    }
-
     @Override
     public void run(){
         while(true){
             while(toDo.isEmpty()); //spin
-            synchronized(locker) {
                 outWriter.println(toDo.poll());
-            }
         }
     }
 }

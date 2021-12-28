@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Client {
+public class ClientA {
     /**
      * Clients are going to connect directly to the master and submit jobs of either type.
      * The client’s submission should include the type, and an ID number that will be

@@ -16,14 +16,11 @@ public class SlaveA {
                 PrintWriter outWriter = new PrintWriter(SlaveSocket.getOutputStream(), true);
                 BufferedReader inReader= new BufferedReader(new InputStreamReader(SlaveSocket.getInputStream()))
         ) {
-
-            String stringMasterJob;
-
+            System.out.println("Slave A connected");
             while (true) {
-                System.out.println("Slave A connected");
+                String stringMasterJob;
                 while((stringMasterJob = inReader.readLine()) == null);
-                System.out.println(stringMasterJob);
-                System.out.println("Slave A received a job");
+                System.out.println("Slave A received job: " + stringMasterJob + ".");
 
                 if (stringMasterJob.charAt(0) == 'A'){
                     System.out.println("Doing A type job. Sleeping for 5 seconds");

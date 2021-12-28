@@ -16,14 +16,11 @@ public class SlaveB {
                 PrintWriter outWriter = new PrintWriter(SlaveSocket.getOutputStream(), true);
                 BufferedReader inReader= new BufferedReader(new InputStreamReader(SlaveSocket.getInputStream()))
         ) {
-
-            String stringMasterJob;
-
+            System.out.println("Slave B connected");
             while (true) {
-                System.out.println("Slave B connected");
+                String stringMasterJob;
                 while((stringMasterJob = inReader.readLine()) == null);
-                System.out.println(stringMasterJob);
-                System.out.println("Slave A received a job");
+                System.out.println("Slave B received job: " + stringMasterJob + ".");
 
                 if (stringMasterJob.charAt(0) == 'A'){
                     System.out.println("Doing A type job. Sleeping for 15 seconds");
@@ -48,5 +45,4 @@ public class SlaveB {
             e.printStackTrace();
         }
     }
-    //Method to grow the list to fit the index
 }
