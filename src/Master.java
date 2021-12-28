@@ -25,7 +25,8 @@ public class Master {
 
         int portNumber = Integer.parseInt(args[0]);
 
-        ArrayList<String> doneList = new ArrayList<>();
+        LinkedList<String> doneListA = new LinkedList<>();
+        LinkedList<String> doneListB = new LinkedList<>();
         Object readerLocker = new Object();
         Object writerLocker = new Object();
 
@@ -48,8 +49,8 @@ public class Master {
             WriterThread slaveBWriter = new WriterThread(slaveBOutWriter, slaveBQueue, writerLocker);
 
             //Create reader threads
-            ReaderThread slaveAReader = new ReaderThread(slaveAInReader, doneList, readerLocker);
-            ReaderThread slaveBReader = new ReaderThread(slaveBInReader, doneList, readerLocker);
+            ReaderThread slaveAReader = new ReaderThread(slaveAInReader, doneListA, readerLocker);
+            ReaderThread slaveBReader = new ReaderThread(slaveBInReader, doneListB, readerLocker);
 
             //Start Threads
 
@@ -73,9 +74,18 @@ public class Master {
                             slaveBQueue.add(jobs.poll());
                         }
                     }
+                    //TAKE IN RESPONSE
                 }
                 else{
-                    System.out.println("Empty list, waiting a second");
+                    //TAKE IN RESPONSES
+                    if(!doneListA.isEmpty()){
+                        System.out.println("FROM A LIST: " + doneListA.pop());
+                    }else if(!doneListB.isEmpty()){
+                        System.out.println("FROM B LIST: " + doneListB.pop());
+                    }else{
+                        System.out.println("Empty done list");
+                    }
+                    System.out.println("Empty delegating list, waiting a second");
                     Thread.sleep(1000);
                 }
             }
@@ -86,7 +96,7 @@ public class Master {
         }
     }
 
-    public static Queue<String> delegate(Queue<String> aList, Queue<String> bList, String job){
+/*    public static Queue<String> delegate(Queue<String> aList, Queue<String> bList, String job){
         char jobType = job.charAt(0);
         int aTimeLeft = estimateTimeLeft('A', aList);
         int bTimeLeft = estimateTimeLeft('B', bList);
@@ -127,5 +137,5 @@ public class Master {
             }
         }
         return totalTime;
-    }
+    }*/
 }

@@ -23,17 +23,17 @@ public class SlaveB {
                 System.out.println("Slave B connected");
                 while((stringMasterJob = inReader.readLine()) == null);
                 System.out.println(stringMasterJob);
-                outWriter.println("Done");
-
                 System.out.println("Slave A received a job");
 
                 if (stringMasterJob.charAt(0) == 'A'){
                     System.out.println("Doing A type job. Sleeping for 15 seconds");
                     Thread.sleep(15_000);
+                    outWriter.println(stringMasterJob);
                 }
                 else {
                     System.out.println("Doing B type job. Sleeping for 5 seconds");
                     Thread.sleep(5_000);
+                    outWriter.println(stringMasterJob);
                 }
             }
 
