@@ -21,13 +21,7 @@ public class SlaveA {
 
             while (true) {
                 System.out.println("Slave A connected");
-
-
-                //Gets the first response index from the server
-                stringMasterJob = inReader.readLine();
-                while(stringMasterJob.equals(null)){
-                    stringMasterJob = inReader.readLine();
-                }
+                while((stringMasterJob = inReader.readLine()) == null);
                 System.out.println(stringMasterJob);
                 outWriter.println("Done");
 
@@ -38,7 +32,7 @@ public class SlaveA {
                     Thread.sleep(5_000);
                 }
                 else {
-                    System.out.println("Doing B type job. Sleeping for 5 seconds");
+                    System.out.println("Doing B type job. Sleeping for 15 seconds");
                     Thread.sleep(15_000);
                 }
             }

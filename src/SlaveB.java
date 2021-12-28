@@ -21,22 +21,19 @@ public class SlaveB {
 
             while (true) {
                 System.out.println("Slave B connected");
+                while((stringMasterJob = inReader.readLine()) == null);
+                System.out.println(stringMasterJob);
+                outWriter.println("Done");
 
-                //Gets the first response index from the server
-                stringMasterJob = inReader.readLine();
-                while(stringMasterJob.equals(null)){
-                    stringMasterJob = inReader.readLine();
-                }
+                System.out.println("Slave A received a job");
 
-                System.out.println("Slave B received a job");
-
-                if (stringMasterJob.charAt(0) == 'B'){
-                    System.out.println("Doing B type job. Sleeping for 5 seconds");
-                    Thread.sleep(5000);
-                }
-                else {
+                if (stringMasterJob.charAt(0) == 'A'){
                     System.out.println("Doing A type job. Sleeping for 15 seconds");
                     Thread.sleep(15_000);
+                }
+                else {
+                    System.out.println("Doing B type job. Sleeping for 5 seconds");
+                    Thread.sleep(5_000);
                 }
             }
 

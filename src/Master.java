@@ -14,7 +14,7 @@ public class Master {
 
 
         Queue<String> jobs = new LinkedList<>();
-        jobs.add("Ab");
+        jobs.add("Bb");
         jobs.add("An");
         jobs.add("Am");
         jobs.add("Ah");
@@ -62,14 +62,24 @@ public class Master {
             //master delegating jobs to queues
             while (true) {
                 if(!jobs.isEmpty()){
-                    Queue<String> listToAddTo = delegate(slaveAQueue, slaveBQueue, jobs.peek());
-                    listToAddTo.add(jobs.poll());
+                    if(slaveAQueue.size() > slaveBQueue.size()){
+                        slaveBQueue.add(jobs.poll());
+                    }else if(slaveAQueue.size() < slaveBQueue.size()){
+                        slaveAQueue.add(jobs.poll());
+                    }else if(slaveAQueue.size() == slaveBQueue.size()){
+                        if(jobs.peek().charAt(0) == 'A'){
+                            slaveAQueue.add(jobs.poll());
+                        }else if(jobs.peek().charAt(0) == 'B'){
+                            slaveBQueue.add(jobs.poll());
+                        }
+                    }
                 }
                 else{
-                    System.out.println("Empty");
+                    System.out.println("Empty list, waiting a second");
+                    Thread.sleep(1000);
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             System.out.println(
                     "Exception caught when trying to listen on port " + portNumber + " or listening for a connection");
             System.out.println(e.getMessage());
@@ -117,7 +127,5 @@ public class Master {
             }
         }
         return totalTime;
-        //comment
-        //comment 2
     }
 }
