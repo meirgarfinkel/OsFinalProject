@@ -5,7 +5,9 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 
 public class ClientA {
     /**
@@ -17,17 +19,14 @@ public class ClientA {
     public static void main(String[] args) throws IOException {
         // Hard code in port number if necessary:
         args = new String[]{"30121"};
-        HashMap<Integer,Character> jobs = new HashMap<>();
-        jobs.put(1,'A');
-        jobs.put(2,'B');
-        jobs.put(3,'B');
-        jobs.put(4,'A');
-        jobs.put(5,'B');
-        jobs.put(6,'A');
+        LinkedList<String> doneListA = new LinkedList<>();
+        Queue<String> jobs = new LinkedList<>();
+        jobs.add("Bb");
+        jobs.add("An");
+        jobs.add("Am");
+        jobs.add("Ah");
+        jobs.add("Ap");
 
-        int amountOfJobs = jobs.size();
-
-        int jobID = 1;
         if (args.length != 1) {
             System.err.println("Usage: java EchoServer <port number>");
             System.exit(1);
@@ -36,34 +35,19 @@ public class ClientA {
         int portNumber = Integer.parseInt(args[0]);
 
         try (ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[0]));
-             Socket clientSocket1 = serverSocket.accept();
-
-             PrintWriter responseWriter1 = new PrintWriter(clientSocket1.getOutputStream(), true);
-             BufferedReader requestReader1 = new BufferedReader(
-                     new InputStreamReader(clientSocket1.getInputStream())) )
+             //Create client sockets
+             Socket clientA = serverSocket.accept();
+             //Create client writers
+             PrintWriter clientAOutWriter = new PrintWriter(clientA.getOutputStream(), true);
+             //Create client readers
+             BufferedReader clientAInReader = new BufferedReader(new InputStreamReader(clientA.getInputStream()));
+        )
         {
-            //everytime the client sends a job, the id increments
-            //something to this extent, though I don't know if correct
-            for (int i = 0; i < jobs.size(); i++) {
-                responseWriter1.println(jobs.get(jobID) + jobID);
-                jobID++;
-            }
-            //while the amount of jobs != 0
-            while (jobs.size() !=0) {
-                int num = 0;
-                //send them to the master
-                responseWriter1.println(jobs.get(num)); // send request to server
-                num++;
-            }
-            //while it has not got back all the jobs, read to make sure to get it from master
-            //todo maybe make it read every two seconds?
-            //should print out job x was finished.
-//            int jobsReceived = 0;
-//            while(jobsReceived <= amountOfJobs){//the amount of jobs received has not reached the total sent
-//                serverResponse = responseReader.readLine(); //keep reading
-//                System.out.println("SERVER RESPONDS: \"" + serverResponse + "\"");
-//            }
+            WriterThread masterWriter = new WriterThread(clientAOutWriter, jobs);
+            ReaderThread masterReader = new ReaderThread(clientAInReader, doneListA);
 
+            //write the list of jobs to the master
+            masterWriter.start();
 
         }
 
