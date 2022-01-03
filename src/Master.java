@@ -8,6 +8,13 @@ public class Master {
     // writer expects a printwriter object. -- writer.setJob(String)
     public static void main(String[] args) throws IOException {
 
+
+
+        // Hard code in port number if necessary:
+        args = new String[]{"30121"};
+
+        int portNumber = Integer.parseInt(args[0]);
+
         Queue<String> slaveAQueue = new LinkedList<>();
         Queue<String> slaveBQueue = new LinkedList<>();
 
@@ -18,11 +25,6 @@ public class Master {
         jobs.add("Ah");
         jobs.add("Ap");
 
-        // Hard code in port number if necessary:
-        args = new String[]{"30121"};
-
-        int portNumber = Integer.parseInt(args[0]);
-
         Queue<String> doneListA = new LinkedList<>();
         Queue<String> doneListB = new LinkedList<>();
         Queue<String> clientXDoneList = new LinkedList<>();
@@ -31,6 +33,7 @@ public class Master {
 
 
         try (ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[0]));
+
              //Create slave sockets
              Socket slaveA = serverSocket.accept();
              Socket slaveB = serverSocket.accept();
@@ -49,6 +52,7 @@ public class Master {
              //Create client readers
              BufferedReader clientXInReader = new BufferedReader(new InputStreamReader(clientX.getInputStream()));
         ) {
+
             //Create writer threads
             WriterThread slaveAWriter = new WriterThread(slaveAOutWriter, slaveAQueue);
             WriterThread slaveBWriter = new WriterThread(slaveBOutWriter, slaveBQueue);
@@ -63,6 +67,7 @@ public class Master {
             slaveAReader.start();
             slaveBReader.start();
             clientXReader.start();
+
             //Start writer threads
             slaveAWriter.start();
             slaveBWriter.start();
@@ -85,7 +90,7 @@ public class Master {
                     Thread.sleep(5000);
                 }
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException e) { //
             System.out.println(
                     "Exception caught when trying to listen on port " + portNumber + " or listening for a connection");
             System.out.println(e.getMessage());
