@@ -25,7 +25,13 @@ public class WriterThread extends Thread{
     @Override
     public void run(){
         while(true){
-            while(toDo.isEmpty()); //spin
+            while(toDo.isEmpty()) {
+                try {
+                    Thread.sleep(5000); //spin
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
                 outWriter.println(toDo.poll());
         }
     }

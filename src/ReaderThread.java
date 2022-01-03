@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Queue;
 
 /*
 ReaderThread will receive its job from the slave class through inReader.readLine();
@@ -14,9 +15,9 @@ job variable will be reset to null so the thread can go back to listening for jo
 public class ReaderThread extends Thread {
     String job;
     BufferedReader inReader; //expecting to receive from master, connected to the slave (totally disconnected from master)
-    LinkedList done;
+    Queue done;
 
-    public ReaderThread(BufferedReader inReader, LinkedList done) {
+    public ReaderThread(BufferedReader inReader, Queue done) {
         this.inReader = inReader;
         this.done = done;
     }

@@ -15,6 +15,7 @@ public class SlaveA {
                 Socket SlaveSocket = new Socket(hostName, portNumber);
                 PrintWriter outWriter = new PrintWriter(SlaveSocket.getOutputStream(), true);
                 BufferedReader inReader= new BufferedReader(new InputStreamReader(SlaveSocket.getInputStream()))
+
         ) {
             System.out.println("Slave A connected");
             while (true) {
