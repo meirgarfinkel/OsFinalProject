@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.Buffer;
 
-public class ClientX {
+public class Client1 {
     public static void main(String[] args) {
 
         args = new String[] {"127.0.0.1", "30121"};
@@ -20,14 +20,17 @@ public class ClientX {
                 BufferedReader masterReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 BufferedReader jobReader = new BufferedReader(new InputStreamReader(System.in))
         ) {
-            System.out.println("Client X is active...");
+            System.out.println("Client 1 is active...");
             while (true){
                 String userInput;
                 String serverResponse;
                 while ((userInput = jobReader.readLine()) != null) {
                     masterWriter.println(userInput); // send request to server
                     System.out.println(userInput);
+                    serverResponse = masterReader.readLine();
+                    System.out.println("Client 1 finished job: " + serverResponse);
                 }
+
             }
         }
         catch (UnknownHostException e) {
