@@ -2,9 +2,16 @@ import java.net.*;
 import java.util.*;
 import java.io.*;
 
+/**
+ * This is the master of all the operations. The clients send jobs to the master, then
+ * the master delegates it, based on certain guidelines, to either SlaveA or SlaveB.
+ * Then after they are done performing their jobs, they send a message back to the Master,
+ * which then sends a message to client letting them know that the job is finished.
+ */
 public class Master {
+
     // reader thread expects a buffered reader object which connects it to the slave and expects access to done list
-    // writer expects a printwriter object. -- writer.setJob(String)
+    // writer expects a printWriter object. -- writer.setJob(String)
     public static void main(String[] args) throws IOException {
 
 
@@ -13,23 +20,23 @@ public class Master {
 
         int portNumber = Integer.parseInt(args[0]);
 
+        /*Makes two queues to which jobs will be added. This is also used in the delegate
+        method below to determine if its better to give a job to the other slave or not
+        */
         Queue<String> slaveAQueue = new LinkedList<>();
         Queue<String> slaveBQueue = new LinkedList<>();
 
+        //List of jobs that has been received from the Client
         Queue<String> jobs = new LinkedList<>();
-        /*jobs.add("Bb");
-        jobs.add("An");
-        jobs.add("Am");
-        jobs.add("Ah");
-        jobs.add("Ap");*/
 
+        //Different lists to see how much is finished
         Queue<String> doneListA = new LinkedList<>();
         Queue<String> doneListB = new LinkedList<>();
         Queue<String> client1DoneList = new LinkedList<>();
         Queue<String> client2DoneList = new LinkedList<>();
         Queue<String> doneMasterList = new LinkedList<>();
-        Object readerLocker = new Object();
-        Object writerLocker = new Object();
+
+        //TODO i DELETED THE LOCKERS THAT WERE ABOVE THIS COMMENT
 
 
         try (ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[0]));

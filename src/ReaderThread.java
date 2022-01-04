@@ -14,7 +14,7 @@ job variable will be reset to null so the thread can go back to listening for jo
 
 public class ReaderThread extends Thread {
     String job;
-    BufferedReader inReader; //expecting to receive from master, connected to the slave (totally disconnected from master)
+    BufferedReader inReader;
     Queue done;
 
     public ReaderThread(BufferedReader inReader, Queue done) {
@@ -30,11 +30,10 @@ public class ReaderThread extends Thread {
         return job;
     }
 
+
     @Override
     public void run() {
-
         String stringMasterJob;
-
         while (true) {
             try {
                 //while (!((stringMasterJob = inReader.readLine()) == null)) ;

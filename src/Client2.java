@@ -13,6 +13,8 @@ public class Client2 {
         String hostName = args[0];
         int portNumber = Integer.parseInt(args[1]);
 
+        //Creates a PrintWrite and a BufferedReader in order to be able to send jobs
+        // and receive completed jobs from the Master
         try (
                 Socket clientSocket = new Socket(hostName, portNumber);
                 PrintWriter masterWriter = new PrintWriter(clientSocket.getOutputStream(), true);
