@@ -1,7 +1,6 @@
 import java.net.*;
 import java.util.*;
 import java.io.*;
-import java.util.concurrent.SynchronousQueue;
 
 public class Master {
     // reader thread expects a buffered reader object which connects it to the slave and expects access to done list
@@ -27,7 +26,9 @@ public class Master {
 
         Queue<String> doneListA = new LinkedList<>();
         Queue<String> doneListB = new LinkedList<>();
-        Queue<String> clientXDoneList = new LinkedList<>();
+        Queue<String> client1DoneList = new LinkedList<>();
+        Queue<String> client2DoneList = new LinkedList<>();
+        Queue<String> doneMasterList = new LinkedList<>();
         Object readerLocker = new Object();
         Object writerLocker = new Object();
 
@@ -56,7 +57,7 @@ public class Master {
             //Create writer threads
             WriterThread slaveAWriter = new WriterThread(slaveAOutWriter, slaveAQueue);
             WriterThread slaveBWriter = new WriterThread(slaveBOutWriter, slaveBQueue);
-            WriterThread clientXWriter = new WriterThread(clientXOutWriter, clientXDoneList);
+            WriterThread clientXWriter = new WriterThread(clientXOutWriter, client1DoneList);
 
             //Create reader threads
             ReaderThread slaveAReader = new ReaderThread(slaveAInReader, doneListA);
@@ -76,18 +77,20 @@ public class Master {
             //master delegating jobs to queues
             while (true) {
                 if(!jobs.isEmpty()){
-                    delegate(slaveAQueue, slaveBQueue, jobs);
+                    delegateToSlaves(slaveAQueue, slaveBQueue, jobs);
                 }
                 else{
                     //TAKE IN RESPONSES
                     if(!doneListA.isEmpty()){
-                        System.out.println("DONE FROM A LIST: " + doneListA.poll());
+                        doneMasterList.add(doneListA.poll());
                     }
                     if(!doneListB.isEmpty()){
-                        System.out.println("DONE FROM B LIST: " + doneListB.poll());
+                        doneMasterList.add(doneListB.poll());
                     }
                     System.out.println("Master has delegated all jobs, waiting 5 seconds.");
                     Thread.sleep(5000);
+
+                    delegateToClients(client1DoneList, client2DoneList, doneMasterList);
                 }
             }
         } catch (IOException | InterruptedException e) { //
@@ -97,7 +100,7 @@ public class Master {
         }
     }
 
-    private static void delegate(Queue<String> slaveAQueue, Queue<String> slaveBQueue, Queue<String> jobs) {
+    private static void delegateToSlaves(Queue<String> slaveAQueue, Queue<String> slaveBQueue, Queue<String> jobs) {
         if(slaveAQueue.size() > slaveBQueue.size()){
             slaveBQueue.add(jobs.poll());
         }else if(slaveAQueue.size() < slaveBQueue.size()){
@@ -107,6 +110,16 @@ public class Master {
                 slaveAQueue.add(jobs.poll());
             }else if(jobs.peek().charAt(0) == 'B'){
                 slaveBQueue.add(jobs.poll());
+            }
+        }
+    }
+
+    private static void delegateToClients(Queue<String> client1DoneList, Queue<String> client2DoneList, Queue<String> doneList) {
+        String completedJob;
+        if (!doneList.isEmpty()) {
+            completedJob = doneList.poll();
+            if (completedJob.charAt(1) == 1) {
+                client1DoneList.add(completedJob);
             }
         }
     }
