@@ -28,8 +28,10 @@ public class Client1 {
                 String userInput;
                 String serverResponse;
 
-                while ((userInput = jobReader.readLine()) != null) {
+                while (!(userInput = jobReader.readLine()).equals("done")) {
                     masterWriter.println(userInput); // send request to server
+                }
+                while(true) {
                     serverResponse = masterReader.readLine();
                     System.out.println("Client 1 received completed job: " + serverResponse);
                 }

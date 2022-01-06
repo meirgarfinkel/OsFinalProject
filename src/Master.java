@@ -36,8 +36,6 @@ public class Master {
         Queue<String> client2DoneList = new LinkedList<>();
         Queue<String> doneMasterList = new LinkedList<>();
 
-        //TODO i DELETED THE LOCKERS THAT WERE ABOVE THIS COMMENT
-
 
         try (ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[0]));
 
@@ -94,11 +92,11 @@ public class Master {
                 }
 
                 //TAKE IN RESPONSES
-                while (!doneListA.isEmpty()) {
+                if (!doneListA.isEmpty()) {
                     System.out.println("SLAVE A FINISHED A JOB");
                     doneMasterList.add(doneListA.poll());
                 }
-                while (!doneListB.isEmpty()) {
+                if (!doneListB.isEmpty()) {
                     System.out.println("SLAVE B FINISHED A JOB");
                     doneMasterList.add(doneListB.poll());
                 }
